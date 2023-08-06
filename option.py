@@ -10,6 +10,8 @@ parser.add_argument('--module_type', type=str, default='graph_attention', choice
 parser.add_argument('--mask_label', action='store_true', default=False)
 parser.add_argument('--mask_ratio', type=float, default=0.5)
 # add
+parser.add_argument('--dev_alpha', type=float, default=1.0, help="dev loss inlier_loss param")
+parser.add_argument('--dev_beta', type=float, default=1.0, help="dev loss outlier_loss param")
 parser.add_argument('--anomaly_alpha', type=float, default=1e-1, help="gnn anomaly loss param")
 parser.add_argument('--supc_alpha', type=float, default=5e-3, help="gnn supc loss param")
 parser.add_argument('--memory_size', type=int, default=5000, help="gdn memory_size")
