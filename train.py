@@ -72,7 +72,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 now_time = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 log_base_path = f"{os.getcwd()}/train_log"
 file_list = os.listdir(log_base_path)
-max_num = [int(fl.split("_")[0]) for fl in file_list if len(fl.split("_"))>2] + [-1]
+max_num = [0] # [int(fl.split("_")[0]) for fl in file_list if len(fl.split("_"))>2] + [-1]
 log_base_path = f"{log_base_path}/{max(max_num)+1}_{now_time}"
 # log and path
 get_checkpoint_path = lambda epoch: f'{log_base_path}saved_checkpoints/{args.data_set}-{args.mode}-{args.module_type}-{args.mask_ratio}-{epoch}.pth'
