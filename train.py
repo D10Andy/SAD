@@ -24,27 +24,16 @@ def criterion(prediction_dict, labels, model, config):
     loss_classify = torch.mean(loss_classify)
 
     loss = loss_classify.clone()
-    loss_anomaly = 0
-    loss_supc = 0
+    loss_anomaly = torch.Tensor(0).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+    loss_supc = torch.Tensor(0).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
     alpha = config.anomaly_alpha  # 1e-1
     beta = config.supc_alpha # 1e-3
-    group_count = [0, 0, 0, 0, 0, 0, 0]
-    if config.mode == 'gdn':
-        loss_anomaly = model.gdn.dev_loss(torch.squeeze(labels), torch.squeeze(prediction_dict['anom_score']), torch.squeeze(prediction_dict['time']))
-        loss += alpha * loss_anomaly
     if config.mode == 'sad':
         loss_anomaly = model.gdn.dev_loss(torch.squeeze(labels), torch.squeeze(prediction_dict['anom_score']), torch.squeeze(prediction_dict['time']))
         loss_supc = model.suploss(prediction_dict['root_embedding'], prediction_dict['group'], prediction_dict['dev'])
         loss += alpha * loss_anomaly + beta * loss_supc
-        group_0 = (prediction_dict['group'] == 0).nonzero().shape[0]
-        group_1 = (prediction_dict['group'] == 1).nonzero().shape[0]
-        group_2 = (prediction_dict['group'] == 2).nonzero().shape[0]
-        group_3 = (prediction_dict['group'] == 3).nonzero().shape[0]
-        group_4 = (prediction_dict['group'] == 4).nonzero().shape[0]
-        group_5 = (prediction_dict['group'] == 5).nonzero().shape[0]
-        group_6 = (prediction_dict['group'] == 6).nonzero().shape[0]
-        group_count = [group_0, group_1, group_2, group_3, group_4, group_5, group_6]
-    return loss, loss_classify, loss_anomaly, loss_supc, group_count
+
+    return loss, loss_classify, loss_anomaly, loss_supc
 
 def eval_epoch(dataset, model, config, device):
     loss = 0
@@ -144,7 +133,6 @@ for epoch in range(config.n_epochs):
     loss_anomaly_list = []
     loss_class_list = []
     loss_supc_list = []
-    group_count_list = [0, 0, 0, 0, 0, 0, 0]
     dev_score_list = np.array([])
     dev_label_list = np.array([])
     with tqdm(total=len(loader_train)) as t:
@@ -164,8 +152,7 @@ for epoch in range(config.n_epochs):
             )
             y = batch_sample['labels'].to(device)
             dev_score = x["dev"]
-            loss, loss_classify, loss_anomaly, loss_supc, group_count = criterion(x, y, model, config)
-            group_count_list = (np.array(group_count_list) + np.array(group_count)).tolist()
+            loss, loss_classify, loss_anomaly, loss_supc = criterion(x, y, model, config)
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1, norm_type=2)
             optimizer.step()
