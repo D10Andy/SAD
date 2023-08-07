@@ -1,6 +1,6 @@
 # SAD: Semi-Supervised Anomaly Detection on Dynamic Graphs
 
-[PyTorch implementation of the paper "SAD: Semi-Supervised Anomaly Detection on Dynamic Graphs".](https://arxiv.org/abs/2305.13573)
+PyTorch implementation of the paper "[SAD: Semi-Supervised Anomaly Detection on Dynamic Graphs](https://arxiv.org/abs/2305.13573)".
 
 #  Requirments
 + torch==1.10.1+cu111
@@ -15,7 +15,7 @@
 Download data.csv into file './dataset/'  
   
 [Wikipedia](http://snap.stanford.edu/jodie/wikipedia.csv)  
-[Reddit](http://snap.stanford.edu/jodie/reddit.csv)
+[Reddit](http://snap.stanford.edu/jodie/reddit.csv)  
 [Mooc](http://snap.stanford.edu/jodie/mooc.csv)
 ## Preprocessing
 We use the data processing method of the reference [TGAT](https://openreview.net/pdf?id=rJeW1yHYwH), [repo](https://github.com/StatsDLMathsRecomSys/Inductive-representation-learning-on-temporal-graphs#inductive-representation-learning-on-temporal-graphs-iclr-2020).  
