@@ -37,7 +37,4 @@ python train.py --data_set wikipedia --anomaly_alpha 1e-1 --supc_alpha 5e-3 --ma
 ```
 
 # Model Structure
-
-
-
-
+![image](https://github.com/D10Andy/SAD/blob/main/model_structure.jpg)
